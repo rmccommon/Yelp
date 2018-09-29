@@ -31,9 +31,16 @@ class BusinessCell: UITableViewCell {
     @IBOutlet weak var businessImage: UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
+        businessImage.layer.cornerRadius = 3
+        businessImage.clipsToBounds = true
+        resturantName.preferredMaxLayoutWidth = resturantName.frame.size.width
         // Initialization code
     }
-    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        resturantName.preferredMaxLayoutWidth = resturantName.frame.size.width
+    }
     
 
     override func setSelected(_ selected: Bool, animated: Bool) {

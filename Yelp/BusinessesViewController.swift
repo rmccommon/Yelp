@@ -8,8 +8,9 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
+    @IBOutlet weak var foodSearch: UISearchBar!
     
     
     var businesses: [Business]!
@@ -20,17 +21,14 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     override func viewDidLoad() {
         super.viewDidLoad()
         businessTable.dataSource = self
+        foodSearch.delegate = self
+        navigationItem.titleView = foodSearch
+        businessTable.rowHeight = UITableViewAutomaticDimension
+        businessTable.estimatedRowHeight = 120
         Business.searchWithTerm(term: "Thai", completion: { (businesses: [Business]?, error: Error?) -> Void in
             
                 self.businesses = businesses
             self.businessTable.reloadData()
-                if let businesses = businesses {
-                    for business in businesses {
-                        print(business.name!)
-                        print(business.address!)
-                    }
-                }
-            
             }
         )
     
@@ -46,6 +44,9 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
          */
         
     }
+    
+
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if businesses != nil{
             return businesses!.count
@@ -53,6 +54,13 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
             return 0
         }
         
+    }
+    func searchBar(_ foodSearch: UISearchBar, textDidChange searchText: String) {
+        Business.searchWithTerm(term: searchText, completion: { (businesses: [Business]?, error: Error?) -> Void in
+            
+            self.businesses = businesses
+            self.businessTable.reloadData()
+        })
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
